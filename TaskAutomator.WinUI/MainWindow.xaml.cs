@@ -12,15 +12,19 @@ namespace TfsAutomator.WinUI
         public MainWindow()
         {
             InitializeComponent();
+
+            _domain.Text = Settings.Default.UserDomain;
+            _login.Text = Settings.Default.UserLogin;
+            _password.Password = Settings.Default.UserPassword;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             #region MyRegion
 
-            Settings.Default.UserDomain = "REGION";
-            Settings.Default.UserLogin = "VTB198703";
-            Settings.Default.UserPassword = "***";
+            Settings.Default.UserDomain = _domain.Text;
+            Settings.Default.UserLogin = _login.Text;
+            Settings.Default.UserPassword = _password.Password;
 
             #endregion
 
@@ -32,6 +36,8 @@ namespace TfsAutomator.WinUI
                 App.ShowError(new Exception(pingResult));
                 return;
             }
+            else
+                Settings.Default.Save();
 
             var task = taskService.GetTask("92757");
             task.Description.Equals(null);

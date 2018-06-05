@@ -7,6 +7,23 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="Connect" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonBase_OnClick"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="Domain: "/>
+        <TextBox x:Name="_domain" Grid.Column="1" MinWidth="100"/>
+        <TextBlock Text="Login: " Grid.Row="1"/>
+        <TextBox x:Name="_login" Grid.Row="1" Grid.Column="1"/>
+        <TextBlock Text="Password: " Grid.Row="2"/>
+        <PasswordBox x:Name="_password" Grid.Row="2" Grid.Column="1"/>
+        <Button Content="Connect" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonBase_OnClick" Grid.Row="3" Grid.ColumnSpan="3"/>
     </Grid>
 </Window>
