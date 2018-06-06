@@ -20,13 +20,9 @@ namespace TfsAutomator.WinUI
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            #region MyRegion
-
             Settings.Default.UserDomain = _domain.Text;
             Settings.Default.UserLogin = _login.Text;
             Settings.Default.UserPassword = _password.Password;
-
-            #endregion
 
             var credentials = new NetworkCredential(Settings.Default.UserLogin, Settings.Default.UserPassword, Settings.Default.UserDomain);
             ITaskService taskService = new Tfs2015Service(new Uri(Settings.Default.TfsAddress), credentials);
@@ -46,6 +42,27 @@ namespace TfsAutomator.WinUI
             if (taskService.UpdateTask(task).IsSuccess)
             {
             }
+        }
+
+        private void OnJobClick(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.UserDomain = _domain.Text;
+            Settings.Default.UserLogin = _login.Text;
+            Settings.Default.UserPassword = _password.Password;
+
+            var credentials = new NetworkCredential(Settings.Default.UserLogin, Settings.Default.UserPassword, Settings.Default.UserDomain);
+
+            var taskSelector = new SimpleTaskSelector(new [] { "1", "2", "3" });
+            var processor = new LinkReplacer(new Tfs2015Service(new Uri(Settings.Default.TfsAddress), credentials));
+            var job = new Job(taskSelector, processor);
+            var jobResult = job.Run();
+            if (!jobResult.IsSuccess)
+            {
+                App.ShowError(new Exception(jobResult.Error));
+                return;
+            }
+            else
+                Settings.Default.Save();
         }
     }
 }

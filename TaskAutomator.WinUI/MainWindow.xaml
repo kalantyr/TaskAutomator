@@ -24,6 +24,9 @@
         <TextBox x:Name="_login" Grid.Row="1" Grid.Column="1"/>
         <TextBlock Text="Password: " Grid.Row="2"/>
         <PasswordBox x:Name="_password" Grid.Row="2" Grid.Column="1"/>
-        <Button Content="Connect" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonBase_OnClick" Grid.Row="3" Grid.ColumnSpan="3"/>
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Content="Connect" Click="ButtonBase_OnClick" Margin="5"/>
+            <Button Content="Job" Click="OnJobClick" Margin="5"/>
+        </StackPanel>
     </Grid>
 </Window>

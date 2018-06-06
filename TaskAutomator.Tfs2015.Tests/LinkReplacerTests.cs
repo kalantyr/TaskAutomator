@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using TaskAutomator.Tfs2015.Tests.Data;
 
 namespace TaskAutomator.Tfs2015.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class LinkReplacerTests
     {
-        [TestMethod]
+        [Test]
         public void TestMethod1()
         {
-            new LinkReplacer().Process("").Equals(null);
-            TestData.Before_1.Equals(null);
+            var result = LinkReplacer.ReplaceLinks(TestData.Before_1);
+            Assert.AreEqual(TestData.After_1, result);
         }
     }
 }
