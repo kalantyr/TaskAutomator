@@ -13,13 +13,13 @@ namespace TaskAutomator.Tfs2015
     {
         private const int PingTaskId = 92757;
 
-        private readonly Uri _address;
+        public Uri Address { get; private set; }
         private readonly ICredentials _credentials;
 
         public Tfs2015Service(Uri address, ICredentials credentials)
         {
-            _address = address;
-            _credentials = credentials;
+            Address = address ?? throw new ArgumentNullException(nameof(address));
+            _credentials = credentials ?? throw new ArgumentNullException(nameof(credentials));
         }
 
         public string Ping()
@@ -44,7 +44,7 @@ namespace TaskAutomator.Tfs2015
                 var credentials = new VssCredentials(new WindowsCredential(_credentials));
                 var settings = new VssHttpRequestSettings {BypassProxyOnLocal = true};
 
-                var client = new WorkItemTrackingHttpClient(_address, credentials, settings);
+                var client = new WorkItemTrackingHttpClient(Address, credentials, settings);
                 return client;
             }
         }

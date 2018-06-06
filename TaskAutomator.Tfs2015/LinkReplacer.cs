@@ -43,5 +43,24 @@ namespace TaskAutomator.Tfs2015
 
             throw new NotImplementedException();
         }
+
+        internal static ActionResult<string> IdToLink(string taskId, ITaskService taskService, Uri baseUri)
+        {
+            var task = taskService.GetTask(taskId);
+
+            try
+            {
+                var hint = "hint";
+                var link = "link" + baseUri;
+                var text = task.Id + " " + task.Id;
+                var result = $"<a aria-label=\"{hint}\" href=\"{link}\">{text}</a>";
+                return ActionResult<string>.Success(result);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return ActionResult<string>.Fail(e);
+            }
+        }
     }
 }

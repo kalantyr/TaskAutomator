@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
+using Rhino.Mocks;
+using TaskAutomator.Core;
 using TaskAutomator.Tfs2015.Tests.Data;
 
 namespace TaskAutomator.Tfs2015.Tests
@@ -11,6 +14,15 @@ namespace TaskAutomator.Tfs2015.Tests
         {
             var result = LinkReplacer.ReplaceLinks(TestData.Before_1);
             Assert.AreEqual(TestData.After_1, result);
+        }
+
+        [Test]
+        public void IdToLinkTest()
+        {
+            var baseUri = new Uri("http://tfs4alm10v:8080/tfs/TFS2005%20-%20upgraded%20Projects/");
+            var taskService = MockRepository.GenerateStub<ITaskService>();
+            var result = LinkReplacer.IdToLink("140263", taskService, baseUri);
+            Assert.IsNotNull(result);
         }
     }
 }
