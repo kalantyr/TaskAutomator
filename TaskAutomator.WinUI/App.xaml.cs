@@ -10,6 +10,7 @@ namespace TfsAutomator.WinUI
     {
         internal static void ShowError(Exception error)
         {
+            if (error == null) throw new ArgumentNullException(nameof(error));
             MessageBox.Show(error.GetBaseException().Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

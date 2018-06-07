@@ -57,7 +57,7 @@ namespace TaskAutomator.Tfs2015
             try
             {
                 var hint = string.Empty;
-                var link = $"{baseUri}CustomerPortal/_workitems?_a=edit&amp;id={task.Id}";
+                var link = task.Link;
                 var text = task.Id + " " + task.Name;
                 var result = $"<a aria-label=\"{hint}\" href=\"{link}\">{text}</a>";
                 return ActionResult<string>.Success(result);

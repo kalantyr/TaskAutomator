@@ -10,7 +10,7 @@ namespace TaskAutomator.Core
 
         public string Error { get; set; }
 
-        public bool IsSuccess { get; }
+        public bool IsSuccess => string.IsNullOrWhiteSpace(Error);
 
         public static ActionResult<T> Success(T data)
         {

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Net;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using TaskAutomator.Core;
@@ -67,7 +69,6 @@ namespace TfsAutomator.WinUI
             if (!jobResult.IsSuccess)
             {
                 App.ShowError(new Exception(jobResult.Error));
-                return;
             }
             else
                 Settings.Default.Save();
@@ -75,20 +76,32 @@ namespace TfsAutomator.WinUI
 
         private void OnCopyLinkButtonClick(object sender, RoutedEventArgs e)
         {
-            Settings.Default.UserDomain = _domain.Text;
-            Settings.Default.UserLogin = _login.Text;
-            Settings.Default.UserPassword = _password.Password;
-
-            var credentials = new NetworkCredential(Settings.Default.UserLogin, Settings.Default.UserPassword, Settings.Default.UserDomain);
-
-            var result = LinkReplacer.IdToLink(_taskIdTextBox.Text, new Tfs2015Service(new Uri(Settings.Default.TfsAddress), credentials), new Uri(Settings.Default.TfsAddress));
-            if (result.IsSuccess)
+            try
             {
-                Clipboard.SetText(result.Data);
-                Settings.Default.Save();
+                Cursor = Cursors.Wait;
+
+                Settings.Default.UserDomain = _domain.Text;
+                Settings.Default.UserLogin = _login.Text;
+                Settings.Default.UserPassword = _password.Password;
+
+                var credentials = new NetworkCredential(Settings.Default.UserLogin, Settings.Default.UserPassword, Settings.Default.UserDomain);
+
+                var result = LinkReplacer.IdToLink(_taskIdTextBox.Text, new Tfs2015Service(new Uri(Settings.Default.TfsAddress), credentials), new Uri(Settings.Default.TfsAddress));
+                if (result.IsSuccess)
+                {
+                    var obj = new DataObject();
+                    obj.SetData(DataFormats.Html, new MemoryStream(Encoding.Default.GetBytes(result.Data)));
+                    Clipboard.SetDataObject(obj, true);
+
+                    Settings.Default.Save();
+                }
+                else
+                    App.ShowError(result.Exception);
             }
-            else
-                App.ShowError(result.Exception);
+            finally
+            {
+                Cursor = null;
+            }
         }
 
         private void OnTaskIdTextBoxKeyDown(object sender, KeyEventArgs e)

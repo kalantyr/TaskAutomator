@@ -55,15 +55,23 @@ namespace TaskAutomator.Tfs2015
             {
                 var client = WorkItemTrackingHttpClient;
                 var res = client.GetWorkItemAsync(int.Parse(id)).Result;
-                var name = "name";
-                var link = "link";
-                throw new NotImplementedException();
+                var name = res.Fields["System.Title"];
+
+                var description = string.Empty;
+                if (res.Fields.ContainsKey("System.Description"))
+                    description = (string)res.Fields["System.Description"];
+                else
+                {
+                    if (res.Fields.ContainsKey("Microsoft.VSTS.TCM.ReproSteps"))
+                        description = (string)res.Fields["Microsoft.VSTS.TCM.ReproSteps"];
+                }
+
                 var task = new Task
                 {
-                    Id = res.Id.GetValueOrDefault().ToString(),
-                    Name = name,
-                    Description = (string)res.Fields["System.Description"],
-                    Link = new Uri(link)
+                    Id = id,
+                    Name = (string)name,
+                    Description = description,
+                    Link = new Uri(res.Url)
                 };
                 return ActionResult<Task>.Success(task);
             }
