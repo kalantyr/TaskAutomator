@@ -29,7 +29,7 @@
             <Button Content="Job" Click="OnJobClick" Margin="5"/>
             <Border Margin="5">
                 <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="_taskIdTextBox" MinWidth="100" Margin="5"/>
+                    <TextBox x:Name="_taskIdTextBox" MinWidth="100" Margin="5" KeyDown="OnTaskIdTextBoxKeyDown"/>
                     <Button x:Name="_copyLinkButton" Content="Copy" Margin="5" Click="OnCopyLinkButtonClick"/>
                 </StackPanel>
             </Border>

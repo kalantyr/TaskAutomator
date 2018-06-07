@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Windows;
+using System.Windows.Input;
 using TaskAutomator.Core;
 using TaskAutomator.Tfs2015;
 using TfsAutomator.WinUI.Properties;
@@ -88,6 +89,18 @@ namespace TfsAutomator.WinUI
             }
             else
                 App.ShowError(result.Exception);
+        }
+
+        private void OnTaskIdTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Handled)
+                return;
+
+            if (e.Key == Key.Enter)
+            {
+                OnCopyLinkButtonClick(sender, new RoutedEventArgs());
+                e.Handled = true;
+            }
         }
     }
 }
