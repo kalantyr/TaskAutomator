@@ -4,7 +4,7 @@
     {
         string Ping();
 
-        Task GetTask(string id);
+        ActionResult<Task> GetTask(string id);
 
         ActionResult<bool> UpdateTask(Task task);
     }

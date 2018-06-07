@@ -35,7 +35,14 @@ namespace TfsAutomator.WinUI
             else
                 Settings.Default.Save();
 
-            var task = taskService.GetTask("92757");
+            var getTaskResult = taskService.GetTask("92757");
+            if (!getTaskResult.IsSuccess)
+            {
+                App.ShowError(getTaskResult.Exception);
+                return;
+            }
+
+            var task = getTaskResult.Data;
             task.Description.Equals(null);
 
             task.Description = task.Description.Replace("..", ".");
@@ -63,6 +70,24 @@ namespace TfsAutomator.WinUI
             }
             else
                 Settings.Default.Save();
+        }
+
+        private void OnCopyLinkButtonClick(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.UserDomain = _domain.Text;
+            Settings.Default.UserLogin = _login.Text;
+            Settings.Default.UserPassword = _password.Password;
+
+            var credentials = new NetworkCredential(Settings.Default.UserLogin, Settings.Default.UserPassword, Settings.Default.UserDomain);
+
+            var result = LinkReplacer.IdToLink(_taskIdTextBox.Text, new Tfs2015Service(new Uri(Settings.Default.TfsAddress), credentials), new Uri(Settings.Default.TfsAddress));
+            if (result.IsSuccess)
+            {
+                Clipboard.SetText(result.Data);
+                Settings.Default.Save();
+            }
+            else
+                App.ShowError(result.Exception);
         }
     }
 }

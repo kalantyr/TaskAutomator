@@ -49,15 +49,29 @@ namespace TaskAutomator.Tfs2015
             }
         }
 
-        public Task GetTask(string id)
+        public ActionResult<Task> GetTask(string id)
         {
-            var client = WorkItemTrackingHttpClient;
-            var res = client.GetWorkItemAsync(int.Parse(id)).Result;
-            return new Task
+            try
             {
-                Id = res.Id.GetValueOrDefault().ToString(),
-                Description = (string)res.Fields["System.Description"]
-            };
+                var client = WorkItemTrackingHttpClient;
+                var res = client.GetWorkItemAsync(int.Parse(id)).Result;
+                var name = "name";
+                var link = "link";
+                throw new NotImplementedException();
+                var task = new Task
+                {
+                    Id = res.Id.GetValueOrDefault().ToString(),
+                    Name = name,
+                    Description = (string)res.Fields["System.Description"],
+                    Link = new Uri(link)
+                };
+                return ActionResult<Task>.Success(task);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return ActionResult<Task>.Fail(e);
+            }
         }
 
         public ActionResult<bool> UpdateTask(Task task)

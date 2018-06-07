@@ -15,7 +15,10 @@ namespace TaskAutomator.Tfs2015
 
         public ActionResult<bool> Process(string taskId)
         {
-            var task = _taskService.GetTask(taskId);
+            var getTaskResult = _taskService.GetTask(taskId);
+            if (!getTaskResult.IsSuccess)
+                return ActionResult<bool>.Fail(getTaskResult.Exception);
+            var task = getTaskResult.Data;
 
             try
             {
@@ -44,15 +47,18 @@ namespace TaskAutomator.Tfs2015
             throw new NotImplementedException();
         }
 
-        internal static ActionResult<string> IdToLink(string taskId, ITaskService taskService, Uri baseUri)
+        public static ActionResult<string> IdToLink(string taskId, ITaskService taskService, Uri baseUri)
         {
-            var task = taskService.GetTask(taskId);
+            var getTaskResult = taskService.GetTask(taskId);
+            if (!getTaskResult.IsSuccess)
+                return ActionResult<string>.Fail(getTaskResult.Exception);
+            var task = getTaskResult.Data;
 
             try
             {
-                var hint = "hint";
-                var link = "link" + baseUri;
-                var text = task.Id + " " + task.Id;
+                var hint = string.Empty;
+                var link = $"{baseUri}CustomerPortal/_workitems?_a=edit&amp;id={task.Id}";
+                var text = task.Id + " " + task.Name;
                 var result = $"<a aria-label=\"{hint}\" href=\"{link}\">{text}</a>";
                 return ActionResult<string>.Success(result);
             }

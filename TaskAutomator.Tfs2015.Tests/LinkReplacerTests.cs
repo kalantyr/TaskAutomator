@@ -19,10 +19,17 @@ namespace TaskAutomator.Tfs2015.Tests
         [Test]
         public void IdToLinkTest()
         {
-            var baseUri = new Uri("http://tfs4alm10v:8080/tfs/TFS2005%20-%20upgraded%20Projects/");
+            var task = new Task { Id = "123", Name = "Тест" };
             var taskService = MockRepository.GenerateStub<ITaskService>();
-            var result = LinkReplacer.IdToLink("140263", taskService, baseUri);
-            Assert.IsNotNull(result);
+            taskService
+                .Expect(ts => ts.GetTask(Arg<string>.Is.Anything))
+                .Return(ActionResult<Task>.Success(task));
+
+            var baseUri = new Uri("http://tfs4alm10v:8080/tfs/TFS2005%20-%20upgraded%20Projects/");
+
+            var idToLinkResult = LinkReplacer.IdToLink("123", taskService, baseUri);
+            var result = idToLinkResult.Data;
+            Assert.IsTrue(result.Contains("123"));
         }
     }
 }
